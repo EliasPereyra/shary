@@ -1,3 +1,4 @@
+import Button from "@/components/atoms/button";
 import { Colors } from "@/constants/Colors";
 import { Image, ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,10 +12,14 @@ export default function Welcome() {
           width={62}
           height={62}
         />
+        <Image source={require("@/assets/images/cards.png")} width={300} />
         <Text style={styles.title}>Shary</Text>
         <Text style={styles.description}>
           Comparte tus diseños y tus vídeos con los demás
         </Text>
+        <Button color={Colors.light.primary} bg={Colors.light.white}>
+          Continuar con email
+        </Button>
       </ScrollView>
     </SafeAreaView>
   );
@@ -22,6 +27,8 @@ export default function Welcome() {
 
 const styles = StyleSheet.create({
   container: {
+    padding: 26,
+    height: "100%",
     backgroundColor: Colors.light.primary,
   },
   textContainer: {
@@ -29,17 +36,19 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    gap: 8,
   },
   title: {
     color: Colors.light.white,
-    fontSize: 32,
+    fontSize: 64,
     fontWeight: "bold",
   },
   description: {
+    fontWeight: "regular",
     textAlign: "center",
-    color: Colors.light.white,
-    fontSize: 16,
+    color: Colors.light.lightGray,
+    fontSize: 20,
     marginTop: 10,
-    width: 200,
+    width: 280,
   },
 });
