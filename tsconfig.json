@@ -11,6 +11,9 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "mocks/msw.polyfills.js"
+    "mocks/msw.polyfills.js",
+    "services/__tests__/appwrite.test.js",
+    "__tests__/appwrite.test.js",
+    "mocks/server.js"
   ]
 }
