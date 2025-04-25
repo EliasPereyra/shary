@@ -1,13 +1,15 @@
 import { Colors } from "@/constants/Colors";
+import { Href, Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 interface ButtonProps {
   children: string;
   bg?: string;
   color?: string;
+  href: Href;
 }
 
-export default function Button({ children, bg, color }: ButtonProps) {
+export default function Button({ children, bg, color, href }: ButtonProps) {
   return (
     <View
       style={{
@@ -15,9 +17,9 @@ export default function Button({ children, bg, color }: ButtonProps) {
         ...styles.buttonConainer,
       }}
     >
-      <Text style={{ color: color ?? Colors.light.white, ...styles.text }}>
-        {children}
-      </Text>
+      <Link href={href} style={styles.text}>
+        <Text style={{ color: color ?? Colors.light.white }}>{children}</Text>
+      </Link>
     </View>
   );
 }
@@ -27,7 +29,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 8,
     padding: 14,
-    width: "100%",
   },
   text: {
     fontWeight: "bold",
