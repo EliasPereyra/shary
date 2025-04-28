@@ -61,6 +61,7 @@
     "jest": "^29.5.13",
     "jest-expo": "~51.0.4",
     "msw": "^2.7.3",
+    "react-native-animatable": "^1.4.0",
     "typescript": "^5.3.3"
   },
   "private": true
