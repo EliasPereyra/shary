@@ -7,7 +7,7 @@ import { useState } from "react";
 
 interface InputProps {
   label?: string;
-  type?: "text" | "search" | "description" | "password";
+  type?: "text" | "search" | "description" | "password" | "email";
   placeholder?: string;
   value: string;
   onChangeText: (value: string) => void;
@@ -37,6 +37,21 @@ export default function Input({
           placeholder={placeholder}
           placeholderTextColor={color}
           maxLength={100}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+      )}
+      {type === "email" && (
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          style={styles.input}
+          placeholder={placeholder}
+          placeholderTextColor={color}
+          maxLength={100}
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="email-address"
         />
       )}
       {type === "search" && (
