@@ -1,15 +1,27 @@
 import { Colors } from "@/constants/Colors";
-import { Href, Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface ButtonProps {
   children: string;
   bg?: string;
   color?: string;
-  href: Href;
+  onPress: () => void;
+  isLoading: boolean;
 }
 
-export default function Button({ children, bg, color, href }: ButtonProps) {
+export default function Button({
+  children,
+  bg,
+  color,
+  isLoading,
+  onPress,
+}: ButtonProps) {
   return (
     <View
       style={{
@@ -17,9 +29,16 @@ export default function Button({ children, bg, color, href }: ButtonProps) {
         ...styles.buttonConainer,
       }}
     >
-      <Link href={href} style={styles.text}>
+      <TouchableOpacity style={styles.text} onPress={onPress}>
         <Text style={{ color: color ?? Colors.light.white }}>{children}</Text>
-      </Link>
+        {isLoading && (
+          <ActivityIndicator
+            color={Colors.light.white}
+            animating={isLoading}
+            size="small"
+          />
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
