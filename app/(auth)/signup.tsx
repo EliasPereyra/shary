@@ -3,16 +3,48 @@ import Input from "@/components/atoms/input";
 import AuthTemplate from "@/components/templates/auth";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { Link } from "expo-router";
+import { createUser } from "@/services/appwrite";
+import { Link, router } from "expo-router";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 export default function Signup() {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <AuthTemplate>
-      <Input label="Nombre Completo " type="text" />
-      <Input label="Email" type="text" />
-      <Input label="Contraseña" type="text" />
-      <Button bg={Colors.light.primary} color={Colors.light.white} href="/">
+      <Input
+        label="Nombre Completo "
+        type="text"
+        onChangeText={setFullName}
+        value={fullName}
+      />
+      <Input label="Email" type="email" onChangeText={setEmail} value={email} />
+      <Input
+        label="Contraseña"
+        type="password"
+        onChangeText={setPassword}
+        value={password}
+      />
+      <Button
+        onPress={async () => {
+          setIsLoading(true);
+          const user = await createUser({
+            email,
+            password,
+            fullname: fullName,
+          });
+          if (!user) console.log("Hubo un error al crear el usuario");
+          setIsLoading(false);
+          router.push("/signin");
+        }}
+        bg={Colors.light.primary}
+        color={Colors.light.white}
+        isLoading={isLoading}
+      >
         Registrarse
       </Button>
       <Link style={styles.redirect} href="/signin">
