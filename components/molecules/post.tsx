@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { ResizeMode, Video } from "expo-av";
 import {
   Image,
@@ -9,9 +8,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
 import { Colors } from "@/constants/Colors";
 
-export default function Post({ post }: any) {
+type PostProps = {
+  post: any;
+};
+
+export default function Post({ post }: PostProps) {
   const [play, setPlay] = useState(false);
 
   return (
@@ -41,10 +45,9 @@ export default function Post({ post }: any) {
         <Video
           source={{ uri: post.video }}
           useNativeControls
-          resizeMode={ResizeMode.COVER}
           shouldPlay
-          style={{ width: "100%", height: 420 }}
-          videoStyle={{ borderRadius: 8 }}
+          style={{ width: "100%", height: 320, borderRadius: 8 }}
+          resizeMode={ResizeMode.CONTAIN}
         />
       ) : (
         <TouchableOpacity
@@ -89,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 8,
     width: "100%",
+    marginTop: 16,
   },
   header: {
     display: "flex",
