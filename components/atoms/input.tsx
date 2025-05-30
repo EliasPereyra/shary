@@ -42,23 +42,31 @@ export default function Input({
         />
       )}
       {type === "email" && (
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          style={styles.input}
-          placeholder={placeholder}
-          placeholderTextColor={color}
-          maxLength={100}
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="email-address"
-        />
+        <>
+          <TextInput
+            value={value}
+            onChangeText={onChangeText}
+            style={styles.input}
+            placeholder={placeholder}
+            placeholderTextColor={color}
+            maxLength={100}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+          />
+        </>
       )}
       {type === "search" && (
         <View style={styles.searchContainer}>
           <TextInput
             placeholder={placeholder}
             placeholderTextColor={Colors.light.middleGray}
+            value={value}
+            style={{ width: "100%", padding: 10 }}
+            onChangeText={onChangeText}
+            maxLength={100}
+            autoCapitalize="none"
+            autoCorrect={false}
           />
           <IconSymbol name="circle.fill" color={color} />
         </View>
