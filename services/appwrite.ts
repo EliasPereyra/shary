@@ -1,4 +1,11 @@
-import { Client, Account, ID, Avatars, Databases } from "react-native-appwrite";
+import {
+  Client,
+  Account,
+  ID,
+  Avatars,
+  Databases,
+  Query,
+} from "react-native-appwrite";
 
 const {
   EXPO_PUBLIC_PROJECT_ID,
@@ -102,5 +109,29 @@ export const logIn = async (email: string, password: string) => {
     return session;
   } catch (e) {
     console.error("Hubo un error al iniciar sesión", e);
+  }
+};
+
+/**
+ * Obtiene el usuario actual logueado en formato de documento.
+ *
+ * @returns user document
+ */
+export const getCurrentUser = async () => {
+  try {
+    const currentAccount = await getAccount();
+    if (!currentAccount) throw Error;
+
+    const currentUser = await database.listDocuments(
+      Appconfig.databaseId!,
+      Appconfig.userCollectionId!,
+      [Query.equal("accountId", currentAccount.$id)]
+    );
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (error) {
+    console.error("Hubo un error al obtener el usuario", error);
+    return null;
   }
 };
