@@ -135,3 +135,19 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+
+// TODO: experimentar dar la opcion de cerrar todas las sesiones en todos los dispositivos conectados.
+/**
+ * Cierra la sesion actual del usuario.
+ *
+ * @returns session
+ */
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+
+    return session;
+  } catch (e) {
+    console.error("Hubo un error al cerrar sesión", e);
+  }
+};
