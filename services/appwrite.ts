@@ -151,3 +151,21 @@ export const signOut = async () => {
     console.error("Hubo un error al cerrar sesión", e);
   }
 };
+
+/**
+ * Obtiene todos los posts de la base de datos.
+ *
+ * @returns posts
+ */
+export const getAllPosts = async () => {
+  try {
+    const posts = database.listDocuments(
+      Appconfig.databaseId!,
+      Appconfig.videCollectionId!
+    );
+
+    return (await posts).documents;
+  } catch (error) {
+    console.error("Hubo un error al obtener los posts", error);
+  }
+};
