@@ -28,6 +28,12 @@ const account = new Account(client);
 const avatar = new Avatars(client);
 const database = new Databases(client);
 
+/**
+ * Crea un nuevo usuario con email y password. A su vez, crea un avatar con los iniciales del nombre.
+ *
+ * @param params: email, password, fullname
+ * @returns Document user
+ */
 export const createUser = async ({
   email,
   password,
@@ -38,6 +44,7 @@ export const createUser = async ({
   fullname: string;
 }) => {
   try {
+    // La instancia 'account' se encarga de crear un nuevo usuario
     const newAccount = await account.create(
       ID.unique(),
       email,
@@ -80,6 +87,13 @@ export const getAccount = async () => {
   }
 };
 
+/**
+ * Inicia una nueva sesion con email y password.
+ *
+ * @param email
+ * @param password
+ * @returns session
+ */
 export const logIn = async (email: string, password: string) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
