@@ -169,3 +169,26 @@ export const getAllPosts = async () => {
     console.error("Hubo un error al obtener los posts", error);
   }
 };
+
+/**
+ * Obtiene todos los posts de un usuario.
+ *
+ * @param userId
+ * @returns posts
+ */
+export const getUserPosts = async (userId: string) => {
+  try {
+    const posts = database.listDocuments(
+      Appconfig.databaseId!,
+      Appconfig.videCollectionId!,
+      [Query.equal("creator", userId)]
+    );
+
+    return (await posts).documents;
+  } catch (error) {
+    console.error("Hubo un error al obtener los posts", error);
+    throw new Error("Hubo un error al obtener los posts", {
+      cause: error,
+    });
+  }
+};
