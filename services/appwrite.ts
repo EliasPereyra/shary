@@ -5,6 +5,8 @@ import {
   Avatars,
   Databases,
   Query,
+  Storage,
+  ImageGravity,
 } from "react-native-appwrite";
 import { Appconfig } from "./appwrite.config";
 
@@ -16,6 +18,7 @@ const client = new Client()
 const account = new Account(client);
 const avatar = new Avatars(client);
 const database = new Databases(client);
+const storage = new Storage(client);
 
 /**
  * Crea un nuevo usuario con email y password. A su vez, crea un 
@@ -171,6 +174,45 @@ export const getUserPosts = async (userId: string) => {
   } catch (error) {
     console.error("Hubo un error al obtener los posts", error);
     throw new Error("Hubo un error al obtener los posts", {
+      cause: error,
+    });
+  }
+};
+
+/**
+ * En el caso de que el archivo sea una imagen, obtiene el preview de una imagen de tipo .jpg, .png y .gif.
+ * Si es un video obtiene el contenido del archivo.
+ *
+ * Referencia: https://appwrite.io/docs/references/cloud/client-web/storage
+ * @param fileId
+ * @param type
+ * @returns url del archivo
+ */
+export const getFilePreview = async (fileId: string, type: string) => {
+  let fileUrl;
+
+  try {
+    if (type === "video") {
+      fileUrl = storage.getFileView(Appconfig.storageId!, fileId);
+    } else if (type === "image") {
+      fileUrl = storage.getFilePreview(
+        Appconfig.storageId!,
+        fileId,
+        2000,
+        2000,
+        ImageGravity.Center,
+        100
+      );
+    } else {
+      throw new Error("El tipo de archivo es invalido");
+    }
+
+    if (!fileUrl) throw Error;
+
+    return fileUrl;
+  } catch (error) {
+    console.error("Hubo un error al obtener el archivo", error);
+    throw new Error("Hubo un error al obtener el archivo", {
       cause: error,
     });
   }
