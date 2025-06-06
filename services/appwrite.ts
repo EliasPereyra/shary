@@ -6,25 +6,7 @@ import {
   Databases,
   Query,
 } from "react-native-appwrite";
-
-const {
-  EXPO_PUBLIC_PROJECT_ID,
-  EXPO_PUBLIC_PROJECT_PLATFORM,
-  EXPO_PUBLIC_DATABASE_ID,
-  EXPO_PUBLIC_VIDEO_COLLECTION_ID,
-  EXPO_PUBLIC_USER_COLLECTION_ID,
-  EXPO_PUBLIC_STORAGE_ID,
-} = process.env;
-
-export const Appconfig = {
-  platform: EXPO_PUBLIC_PROJECT_PLATFORM,
-  projectId: EXPO_PUBLIC_PROJECT_ID,
-  endpoint: "https://cloud.appwrite.io/v1",
-  databaseId: EXPO_PUBLIC_DATABASE_ID,
-  videCollectionId: EXPO_PUBLIC_VIDEO_COLLECTION_ID,
-  userCollectionId: EXPO_PUBLIC_USER_COLLECTION_ID,
-  storageId: EXPO_PUBLIC_STORAGE_ID,
-};
+import { Appconfig } from "./appwrite.config";
 
 const client = new Client()
   .setProject(Appconfig.projectId!)
@@ -36,7 +18,8 @@ const avatar = new Avatars(client);
 const database = new Databases(client);
 
 /**
- * Crea un nuevo usuario con email y password. A su vez, crea un avatar con los iniciales del nombre.
+ * Crea un nuevo usuario con email y password. A su vez, crea un 
+avatar con los iniciales del nombre.
  *
  * @param params: email, password, fullname
  * @returns Document user
