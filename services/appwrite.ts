@@ -223,7 +223,7 @@ export const getFilePreview = async (fileId: string, type: string) => {
 
 /**
  * Sube un archivo del tipo específico de Appwrite. Una vez que se sube el archivo, se utiliza la función getFilePreview para obtener la url del archivo.
- * Se usa ese url para mostrar el archivo en la pantalla.
+ * Se usa ese url para videoPostmostrar el archivo en la pantalla.
  *
  * Referencia: https://appwrite.io/docs/references/cloud/client-web/storage
  *
@@ -253,6 +253,50 @@ export const uploadFile = async ({
     return fileUrl;
   } catch (error) {
     throw new Error("Hubo un error al subir el archivo", {
+      cause: error,
+    });
+  }
+};
+
+/**
+ * Crea un nuevo video post.
+ *
+ * @param videoPost
+ * @returns Appwrite document
+ */
+export const createVideoPost = async (videoPost: VideoPost) => {
+  try {
+    if (
+      !videoPost.creator ||
+      !videoPost.description ||
+      !videoPost.thumbnailUri ||
+      !videoPost.title ||
+      !videoPost.videoUri
+    ) {
+      throw new Error("Todos los campos son obligatorios");
+    }
+
+    const [thumbnailUrl, videoUrl] = await Promise.all([
+      uploadFile({ file: videoPost.videoUri, type: "image" }),
+      uploadFile({ file: videoPost.videoUri, type: "video" }),
+    ]);
+
+    const newVideoPost = await database.createDocument(
+      Appconfig.databaseId!,
+      Appconfig.videCollectionId!,
+      ID.unique(),
+      {
+        title: videoPost.title,
+        thumbnailUri: thumbnailUrl,
+        videoUri: videoUrl,
+        description: videoPost.description,
+        creator: videoPost.creator,
+      }
+    );
+
+    return newVideoPost;
+  } catch (error) {
+    throw new Error("Hubo un error al crear el post", {
       cause: error,
     });
   }
