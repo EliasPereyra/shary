@@ -301,3 +301,26 @@ export const createVideoPost = async (videoPost: VideoPost) => {
     });
   }
 };
+
+/**
+ * Busca los posts que coinciden con el titulo.
+ *
+ * @param title
+ * @returns documents
+ */
+export const searchPosts = async (title: string) => {
+  try {
+    const posts = await database.listDocuments(
+      Appconfig.databaseId!,
+      Appconfig.videCollectionId!,
+      [Query.search("title", title)]
+    );
+    if (!posts) throw new Error("Hubo un error al obtener los posts");
+
+    return posts.documents;
+  } catch (error) {
+    throw new Error("Hubo un error al obtener los posts", {
+      cause: error,
+    });
+  }
+};
