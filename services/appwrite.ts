@@ -9,6 +9,7 @@ import {
   ImageGravity,
 } from "react-native-appwrite";
 import { Appconfig } from "./appwrite.config";
+import { AppwriteFile, VideoPost } from "@/types/videoPost";
 
 const client = new Client()
   .setProject(Appconfig.projectId!)
@@ -65,8 +66,11 @@ export const createUser = async ({
     if (!newUser) throw Error;
 
     return newUser;
-  } catch (e) {
-    console.error("Hubo un error al crear el usuario", e);
+  } catch (error: any) {
+    console.error("Hubo un error al crear el usuario", error);
+    if (error.code === 409) {
+      throw new Error("El usuario ya existe");
+    }
   }
 };
 
@@ -90,7 +94,6 @@ export const getAccount = async () => {
 export const logIn = async (email: string, password: string) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
-    if (!session) throw Error;
 
     return session;
   } catch (e) {
@@ -213,6 +216,43 @@ export const getFilePreview = async (fileId: string, type: string) => {
   } catch (error) {
     console.error("Hubo un error al obtener el archivo", error);
     throw new Error("Hubo un error al obtener el archivo", {
+      cause: error,
+    });
+  }
+};
+
+/**
+ * Sube un archivo del tipo específico de Appwrite. Una vez que se sube el archivo, se utiliza la función getFilePreview para obtener la url del archivo.
+ * Se usa ese url para mostrar el archivo en la pantalla.
+ *
+ * Referencia: https://appwrite.io/docs/references/cloud/client-web/storage
+ *
+ * @param {Object} params
+ * @param {AppwriteFile} params.file
+ * @param {string} params.type
+ * @returns url
+ */
+export const uploadFile = async ({
+  file,
+  type,
+}: {
+  file: AppwriteFile;
+  type: string;
+}) => {
+  if (!file) return;
+
+  try {
+    const uploadedFile = await storage.createFile(
+      Appconfig.storageId!,
+      ID.unique(),
+      file
+    );
+
+    const fileUrl = await getFilePreview(uploadedFile.$id, type);
+
+    return fileUrl;
+  } catch (error) {
+    throw new Error("Hubo un error al subir el archivo", {
       cause: error,
     });
   }
