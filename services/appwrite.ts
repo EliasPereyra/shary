@@ -237,7 +237,7 @@ export const uploadFile = async ({
   type,
 }: {
   file: AppwriteFile;
-  type: string;
+  type: "image" | "video";
 }) => {
   if (!file) return;
 
