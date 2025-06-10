@@ -7,8 +7,8 @@ export interface AppwriteFile {
 
 export interface VideoPost {
   title: string;
-  thumbnail: string;
-  videoUrl: string;
+  thumbnailUri: AppwriteFile;
+  videoUri: AppwriteFile;
   description: string;
   creator: string;
 }
