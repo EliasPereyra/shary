@@ -1,6 +1,6 @@
-import { getCurrentUser } from "@/services/appwrite";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Models } from "react-native-appwrite";
+import { getCurrentUser } from "@/services/appwrite";
 
 interface UserContext {
   isLoggedIn: boolean;
