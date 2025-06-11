@@ -57,13 +57,13 @@ export const createUser = async ({
       Appconfig.userCollectionId!,
       ID.unique(),
       {
-        $id: newAccount.$id,
-        name: fullname,
-        email,
+        fullname: fullname,
+        email: email,
         avatar: avatarInitials,
+        userId: newAccount.$id!,
       }
     );
-    if (!newUser) throw Error;
+    if (!newUser) throw Error("Hubo un error al crear el usuario");
 
     return newUser;
   } catch (error: any) {
