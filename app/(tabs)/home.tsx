@@ -16,9 +16,11 @@ import Trending from "@/components/molecules/trending";
 import NoVideosMessage from "@/components/atoms/no-videos-msg";
 import { Colors } from "@/constants/Colors";
 import { objs } from "@/utils/mock";
+import { useUserContext } from "@/context/UserAccount.Provider";
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const { userAccount } = useUserContext();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -79,7 +81,7 @@ export default function HomeScreen() {
 
               <Trending posts={objs ?? []} />
             </View>
-            <ThemedText type="default" style={{ marginTop: 20 }}>
+            <ThemedText type="default" style={{ fontSize: 20, marginTop: 20 }}>
               Todos los vídeos
             </ThemedText>
           </View>
@@ -121,6 +123,5 @@ const styles = StyleSheet.create({
     marginTop: 70,
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
   },
 });
