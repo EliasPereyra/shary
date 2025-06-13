@@ -1,12 +1,13 @@
+import { Link, router } from "expo-router";
+import { useState } from "react";
+import { StyleSheet } from "react-native";
+
 import Button from "@/components/atoms/button";
 import Input from "@/components/atoms/input";
 import AuthTemplate from "@/components/templates/auth";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { createUser } from "@/services/appwrite";
-import { Link, router } from "expo-router";
-import { useState } from "react";
-import { StyleSheet } from "react-native";
 
 export default function Signup() {
   const [fullName, setFullName] = useState("");
@@ -37,9 +38,14 @@ export default function Signup() {
             password,
             fullname: fullName,
           });
-          if (!user) console.log("Hubo un error al crear el usuario");
-          setIsLoading(false);
-          router.push("/signin");
+          if (!user) {
+            setIsLoading(false);
+            alert("Hubo un error al crear el usuario");
+            console.log("Hubo un error al crear el usuario");
+          } else {
+            setIsLoading(false);
+            router.push("/signin");
+          }
         }}
         bg={Colors.light.primary}
         color={Colors.light.white}
@@ -48,9 +54,9 @@ export default function Signup() {
         Registrarse
       </Button>
       <Link style={styles.redirect} href="/signin">
-        <ThemedText type="default">
+        <ThemedText type="default" lightColor={Colors.light.lightGray}>
           ¿Ya tienes una cuenta?{" "}
-          <ThemedText type="bold">Iniciar sesión</ThemedText>
+          <ThemedText type="bold">Inicia sesión</ThemedText>
         </ThemedText>
       </Link>
     </AuthTemplate>
