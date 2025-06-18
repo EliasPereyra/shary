@@ -96,8 +96,9 @@ export const logIn = async (email: string, password: string) => {
     const session = await account.createEmailPasswordSession(email, password);
 
     return session;
-  } catch (e) {
+  } catch (e: any) {
     console.error("Hubo un error al iniciar sesión", e);
+    throw new Error("El email o la contraseña son incorrectos");
   }
 };
 
@@ -114,7 +115,7 @@ export const getCurrentUser = async () => {
     const currentUser = await database.listDocuments(
       Appconfig.databaseId!,
       Appconfig.userCollectionId!,
-      [Query.equal("accountId", currentAccount.$id)]
+      [Query.equal("userId", currentAccount.$id)]
     );
     if (!currentUser) throw Error;
 
