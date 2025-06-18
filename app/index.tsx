@@ -1,8 +1,9 @@
-import Button from "@/components/atoms/button";
-import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
+import { Link } from "expo-router";
 import { Image, ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import { ThemedText } from "@/components/ThemedText";
+import { Colors } from "@/constants/Colors";
 
 export default function Welcome() {
   return (
@@ -24,13 +25,18 @@ export default function Welcome() {
         <ThemedText type="default" style={styles.description}>
           Comparte tus diseños y tus vídeos con los demás
         </ThemedText>
-        <Button
+        <Link
           href="/signin"
-          color={Colors.light.primary}
-          bg={Colors.light.white}
+          style={{
+            marginTop: 16,
+            padding: 16,
+            borderRadius: 8,
+            color: Colors.light.primary,
+            backgroundColor: Colors.light.white,
+          }}
         >
           Continuar con email
-        </Button>
+        </Link>
       </ScrollView>
     </SafeAreaView>
   );
