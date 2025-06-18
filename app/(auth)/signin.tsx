@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Link, router } from "expo-router";
 
 import Button from "@/components/atoms/button";
@@ -7,28 +7,35 @@ import Input from "@/components/atoms/input";
 import AuthTemplate from "@/components/templates/auth";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { getCurrentUser, logIn } from "@/services/appwrite";
+import { getCurrentUser, logIn, signOut } from "@/services/appwrite";
 import { useUserContext } from "@/context/UserAccount.Provider";
+import { showErrorMessage, showSuccessMessage } from "@/utils/toastMsgs";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { redirect } = styles;
   const { setUserAccount, setIsLoggedIn } = useUserContext();
+  const { redirect } = styles;
 
   const submit = async () => {
     setIsLoading(true);
     try {
       await logIn(email, password);
+
       const user = await getCurrentUser();
       setUserAccount(user);
       setIsLoggedIn(true);
 
-      Alert.alert("Bienvenido!");
+      showSuccessMessage("Bienvenido", "Iniciaste sesión correctamente");
       router.replace("/home");
     } catch (error: any) {
-      Alert.alert("Error al iniciar sesión", error.message);
+      showErrorMessage(
+        "Hubo un error al iniciar sesión",
+        "Los datos ingresados son incorrectos"
+      );
+      await signOut();
+      console.error("Error al iniciar sesión", error.message);
     } finally {
       setIsLoading(false);
     }
