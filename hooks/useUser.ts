@@ -1,6 +1,7 @@
-import { getAccount } from "@/services/appwrite";
 import { useEffect, useState } from "react";
 import { Models } from "react-native-appwrite";
+
+import { getCurrentUser } from "@/services/appwrite";
 
 /**
  * El hook devuelve el documento de un usuario que esta relacionado con la cuenta con la que se registro.
@@ -9,17 +10,15 @@ import { Models } from "react-native-appwrite";
  * @returns user
  */
 export const useUser = () => {
-  const [user, setUser] = useState<Models.User<Models.Preferences> | undefined>(
-    undefined
-  );
+  const [user, setUser] = useState<Models.Document>({} as Models.Document);
 
   useEffect(() => {
-    getAccount()
+    getCurrentUser()
       .then((res) => {
         if (res) {
           setUser(res);
         } else {
-          setUser(undefined);
+          setUser({} as Models.Document);
         }
       })
       .catch((err) => {
