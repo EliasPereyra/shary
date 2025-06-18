@@ -1,6 +1,8 @@
+import { Image, StyleSheet, View } from "react-native";
+
 import { Colors } from "@/constants/Colors";
-import { Image, StyleSheet, Text, View } from "react-native";
 import { ThemedText } from "../ThemedText";
+import { ThemedView } from "../ThemedView";
 
 export default function AuthTemplate({
   children,
@@ -10,18 +12,18 @@ export default function AuthTemplate({
   const { container } = styles;
 
   return (
-    <View style={container}>
+    <ThemedView style={container}>
       <Image
         source={require("@/assets/images/share-blue.png")}
+        style={{ width: 62, height: 62 }}
         width={62}
         height={62}
       />
-      <ThemedText type="title" lightColor={Colors.light.primary}>
+      <ThemedText type="title" darkColor={Colors.light.primary}>
         Shary
       </ThemedText>
-      <Text style={styles.title}>Shary</Text>
       <View>{children}</View>
-    </View>
+    </ThemedView>
   );
 }
 
@@ -31,7 +33,9 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    gap: 4,
     backgroundColor: Colors.light.white,
+    padding: 16,
   },
   title: {
     fontFamily: "Jost-Bold",
