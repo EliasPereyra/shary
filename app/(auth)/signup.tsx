@@ -2,18 +2,41 @@ import { Link, router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 
-import Button from "@/components/atoms/button";
 import Input from "@/components/atoms/input";
 import AuthTemplate from "@/components/templates/auth";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { createUser } from "@/services/appwrite";
+import { showErrorMessage } from "@/utils/toastMsgs";
+import Button from "@/components/atoms/button";
 
 export default function Signup() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const submit = async () => {
+    try {
+      setIsLoading(true);
+      await createUser({
+        email,
+        password,
+        fullname: fullName,
+      });
+
+      setIsLoading(false);
+      router.push("/signin");
+    } catch (error) {
+      console.error("Error al crear el usuario", error);
+      showErrorMessage(
+        "Hubo un error al crear el usuario",
+        "Intentalo de nuevo"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <AuthTemplate>
@@ -30,27 +53,7 @@ export default function Signup() {
         onChangeText={setPassword}
         value={password}
       />
-      <Button
-        onPress={async () => {
-          setIsLoading(true);
-          const user = await createUser({
-            email,
-            password,
-            fullname: fullName,
-          });
-          if (!user) {
-            setIsLoading(false);
-            alert("Hubo un error al crear el usuario");
-            console.log("Hubo un error al crear el usuario");
-          } else {
-            setIsLoading(false);
-            router.push("/signin");
-          }
-        }}
-        bg={Colors.light.primary}
-        color={Colors.light.white}
-        isLoading={isLoading}
-      >
+      <Button isLoading={isLoading} bg={Colors.light.primary} onPress={submit}>
         Registrarse
       </Button>
       <Link style={styles.redirect} href="/signin">
