@@ -13,6 +13,7 @@ export const Colors = {
     black: "#171717",
     white: "#FAF8F8",
     lightGray: "#E0E0E0",
+    gray: "#BFBFBF",
     middleGray: "#504C4C",
     tint: tintColorLight,
     icon: "#687076",
