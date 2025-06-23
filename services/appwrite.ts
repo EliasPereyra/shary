@@ -170,7 +170,7 @@ export const getUserPosts = async (userId: string) => {
   try {
     const posts = database.listDocuments(
       Appconfig.databaseId!,
-      Appconfig.videCollectionId!,
+      Appconfig.videoCollectionId!,
       [Query.equal("creator", userId)]
     );
 
@@ -284,7 +284,7 @@ export const createVideoPost = async (videoPost: VideoPost) => {
 
     const newVideoPost = await database.createDocument(
       Appconfig.databaseId!,
-      Appconfig.videCollectionId!,
+      Appconfig.videoCollectionId!,
       ID.unique(),
       {
         title: videoPost.title,
@@ -313,7 +313,7 @@ export const searchPosts = async (title: string) => {
   try {
     const posts = await database.listDocuments(
       Appconfig.databaseId!,
-      Appconfig.videCollectionId!,
+      Appconfig.videoCollectionId!,
       [Query.search("title", title)]
     );
     if (!posts) throw new Error("Hubo un error al obtener los posts");

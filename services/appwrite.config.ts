@@ -12,7 +12,7 @@ export const Appconfig = {
   projectId: EXPO_PUBLIC_PROJECT_ID,
   endpoint: "https://cloud.appwrite.io/v1",
   databaseId: EXPO_PUBLIC_DATABASE_ID,
-  videCollectionId: EXPO_PUBLIC_VIDEO_COLLECTION_ID,
+  videoCollectionId: EXPO_PUBLIC_VIDEO_COLLECTION_ID,
   userCollectionId: EXPO_PUBLIC_USER_COLLECTION_ID,
   storageId: EXPO_PUBLIC_STORAGE_ID,
 };
