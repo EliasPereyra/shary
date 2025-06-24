@@ -149,12 +149,12 @@ export const signOut = async () => {
  */
 export const getAllPosts = async () => {
   try {
-    const posts = database.listDocuments(
+    const posts = await database.listDocuments(
       Appconfig.databaseId!,
-      Appconfig.videCollectionId!
+      Appconfig.videoCollectionId!
     );
 
-    return (await posts).documents;
+    return posts.documents;
   } catch (error) {
     console.error("Hubo un error al obtener los posts", error);
   }
@@ -168,13 +168,13 @@ export const getAllPosts = async () => {
  */
 export const getUserPosts = async (userId: string) => {
   try {
-    const posts = database.listDocuments(
+    const posts = await database.listDocuments(
       Appconfig.databaseId!,
       Appconfig.videoCollectionId!,
       [Query.equal("creator", userId)]
     );
 
-    return (await posts).documents;
+    return posts.documents;
   } catch (error) {
     console.error("Hubo un error al obtener los posts", error);
     throw new Error("Hubo un error al obtener los posts", {
@@ -281,6 +281,10 @@ export const createVideoPost = async (videoPost: VideoPost) => {
       uploadFile({ file: videoPost.videoUri, type: "image" }),
       uploadFile({ file: videoPost.videoUri, type: "video" }),
     ]);
+
+    if (!thumbnailUrl || !videoUrl) {
+      throw new Error("Hubo un error al subir el archivo");
+    }
 
     const newVideoPost = await database.createDocument(
       Appconfig.databaseId!,
