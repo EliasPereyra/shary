@@ -240,7 +240,7 @@ export const uploadFile = async ({
   file: AppwriteFile;
   type: "image" | "video";
 }) => {
-  if (!file) return;
+  if (type === "video" && !file) throw new Error("El archivo es requerido");
 
   try {
     const uploadedFile = await storage.createFile(
@@ -248,12 +248,14 @@ export const uploadFile = async ({
       ID.unique(),
       file
     );
+    if (!uploadedFile) throw new Error("No se pudo crear el archivo");
 
     const fileUrl = await getFilePreview(uploadedFile.$id, type);
+    if (!fileUrl) throw new Error("Hubo un error al querer obtener el archivo");
 
     return fileUrl;
   } catch (error) {
-    throw new Error("Hubo un error al subir el archivo", {
+    throw new Error("Hubo un error al obtener el url del archivo", {
       cause: error,
     });
   }
@@ -267,23 +269,21 @@ export const uploadFile = async ({
  */
 export const createVideoPost = async (videoPost: VideoPost) => {
   try {
-    if (
-      !videoPost.creator ||
-      !videoPost.description ||
-      !videoPost.thumbnailUri ||
-      !videoPost.title ||
-      !videoPost.videoUri
-    ) {
+    if (!videoPost.creator || !videoPost.title || !videoPost.videoUri) {
       throw new Error("Todos los campos son obligatorios");
     }
 
-    const [thumbnailUrl, videoUrl] = await Promise.all([
-      uploadFile({ file: videoPost.videoUri, type: "image" }),
-      uploadFile({ file: videoPost.videoUri, type: "video" }),
-    ]);
+    const thumbnailUrl = await uploadFile({
+      file: videoPost.thumbnailUri,
+      type: "image",
+    });
+    const videoUrl = await uploadFile({
+      file: videoPost.videoUri,
+      type: "video",
+    });
 
     if (!thumbnailUrl || !videoUrl) {
-      throw new Error("Hubo un error al subir el archivo");
+      throw new Error("Hubo un error al subir el archivo para el video");
     }
 
     const newVideoPost = await database.createDocument(
@@ -292,8 +292,8 @@ export const createVideoPost = async (videoPost: VideoPost) => {
       ID.unique(),
       {
         title: videoPost.title,
-        thumbnailUri: thumbnailUrl,
-        videoUri: videoUrl,
+        thumbnail: thumbnailUrl,
+        videoUrl: videoUrl,
         description: videoPost.description,
         creator: videoPost.creator,
       }
