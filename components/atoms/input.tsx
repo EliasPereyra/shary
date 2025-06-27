@@ -1,9 +1,10 @@
-import { Colors } from "@/constants/Colors";
+import { useState } from "react";
+
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { IconSymbol } from "../ui/IconSymbol";
 import { ThemedText } from "../ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useState } from "react";
+import { Colors } from "@/constants/Colors";
 
 interface InputProps {
   label?: string;
@@ -28,7 +29,9 @@ export default function Input({
 
   return (
     <View style={styles.inputContainer}>
-      <ThemedText type="default">{label}</ThemedText>
+      <ThemedText style={styles.label} type="default">
+        {label}
+      </ThemedText>
       {type === "text" && (
         <TextInput
           value={value}
@@ -62,7 +65,7 @@ export default function Input({
             placeholder={placeholder}
             placeholderTextColor={Colors.light.middleGray}
             value={value}
-            style={{ width: "100%", padding: 10 }}
+            style={{ width: "100%", padding: 8 }}
             onChangeText={onChangeText}
             maxLength={100}
             autoCapitalize="none"
@@ -74,6 +77,8 @@ export default function Input({
       {type === "description" && (
         <TextInput
           multiline
+          value={value}
+          onChangeText={onChangeText}
           numberOfLines={4}
           style={styles.input}
           placeholder={placeholder}
@@ -88,12 +93,15 @@ export default function Input({
             onChangeText={onChangeText}
             placeholder={placeholder}
             placeholderTextColor={color}
-            style={{ width: "90%", padding: 10 }}
+            style={{ width: "90%", padding: 10, fontSize: 18 }}
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <TouchableOpacity
+            style={{ paddingInline: 8 }}
+            onPress={() => setShowPassword(!showPassword)}
+          >
             <IconSymbol
               name={`${showPassword ? "eye.fill" : "eye.slash.fill"}`}
-              color="#000000"
+              color={Colors.light.black}
               size={24}
             />
           </TouchableOpacity>
@@ -111,34 +119,36 @@ const styles = StyleSheet.create({
   },
   label: {
     color: Colors.light.black,
-    fontSize: 16,
+    fontSize: 20,
   },
   input: {
     width: "100%",
-    borderColor: Colors.light.middleGray,
-    borderWidth: 1,
+    borderColor: Colors.light.gray,
+    borderWidth: 0.5,
     borderRadius: 8,
     marginBottom: 16,
     padding: 10,
+    fontSize: 18,
+    color: Colors.light.middleGray,
   },
   password: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderColor: Colors.light.middleGray,
+    borderColor: Colors.light.gray,
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 16,
-    paddingRight: 10,
+    paddingRight: 2,
   },
   searchContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 8,
+    padding: 6,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.light.middleGray,
+    borderColor: Colors.light.gray,
   },
 });
