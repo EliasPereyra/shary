@@ -8,7 +8,7 @@ import { Models } from "react-native-appwrite";
  * @returns data, isLoading, reFetchData
  */
 export const useAppwriteData = (
-  fn: () => Promise<Models.Document[] | undefined>
+  documents: Promise<Models.Document[] | undefined>
 ) => {
   const [data, setData] = useState<Models.Document[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,8 +16,8 @@ export const useAppwriteData = (
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const res = await fn();
-      setData(res!);
+      const docs = await documents;
+      setData(docs!);
     } catch (error) {
       throw new Error("Error al obtener los datos", {
         cause: error,
