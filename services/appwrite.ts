@@ -240,13 +240,19 @@ export const uploadFile = async ({
   file: AppwriteFile;
   type: "image" | "video";
 }) => {
-  if (type === "video" && !file) throw new Error("El archivo es requerido");
+  if (!file) throw new Error("El archivo es requerido");
+
+  console.log("Subiendo el archivo", file);
 
   try {
     const uploadedFile = await storage.createFile(
       Appconfig.storageId!,
       ID.unique(),
-      file
+      file,
+      [],
+      (e) => {
+        if (e.progress) console.log(e.progress);
+      }
     );
     if (!uploadedFile) throw new Error("No se pudo crear el archivo");
 
