@@ -29,15 +29,18 @@ export default function Button({
         ...styles.buttonConainer,
       }}
     >
-      <TouchableOpacity style={styles.text} onPress={onPress}>
-        <Text style={{ color: color ?? Colors.light.white }}>{children}</Text>
-        {isLoading && (
-          <ActivityIndicator
-            color={Colors.light.white}
-            animating={isLoading}
-            size="small"
-          />
-        )}
+      <TouchableOpacity onPress={onPress}>
+        <Text style={{ color: color ?? Colors.light.white }}>
+          {isLoading ? (
+            <ActivityIndicator
+              color={Colors.light.white}
+              animating={isLoading}
+              size="small"
+            />
+          ) : (
+            children
+          )}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -45,12 +48,11 @@ export default function Button({
 
 const styles = StyleSheet.create({
   buttonConainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
     borderRadius: 8,
-    padding: 14,
-  },
-  text: {
-    fontWeight: "bold",
-    textAlign: "center",
+    padding: 16,
   },
 });
