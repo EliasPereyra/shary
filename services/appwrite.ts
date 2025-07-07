@@ -167,6 +167,8 @@ export const getAllPosts = async () => {
  * @returns posts
  */
 export const getUserPosts = async (userId: string) => {
+  if (!userId) throw new Error("El id del usuario es requerido");
+
   try {
     const posts = await database.listDocuments(
       Appconfig.databaseId!,
@@ -199,14 +201,7 @@ export const getFilePreview = async (fileId: string, type: string) => {
     if (type === "video") {
       fileUrl = storage.getFileView(Appconfig.storageId!, fileId);
     } else if (type === "image") {
-      fileUrl = storage.getFilePreview(
-        Appconfig.storageId!,
-        fileId,
-        2000,
-        2000,
-        ImageGravity.Center,
-        100
-      );
+      fileUrl = storage.getFilePreview(Appconfig.storageId!, fileId);
     } else {
       throw new Error("El tipo de archivo es invalido");
     }
