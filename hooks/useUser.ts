@@ -12,18 +12,18 @@ import { getCurrentUser } from "@/services/appwrite";
 export const useUser = () => {
   const [user, setUser] = useState<Models.Document>({} as Models.Document);
 
+  const getUser = async () => {
+    try {
+      const user = await getCurrentUser();
+
+      setUser(user as Models.Document);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    getCurrentUser()
-      .then((res) => {
-        if (res) {
-          setUser(res);
-        } else {
-          setUser({} as Models.Document);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    getUser();
   }, []);
 
   return user;
