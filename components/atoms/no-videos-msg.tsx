@@ -2,6 +2,7 @@ import { Image, View } from "react-native";
 
 import { ThemedText } from "../ThemedText";
 import { Colors } from "@/constants/Colors";
+import { Link } from "expo-router";
 
 export default function NoVideosMessage() {
   return (
@@ -15,7 +16,14 @@ export default function NoVideosMessage() {
         darkColor={Colors.light.black}
         style={{ marginBottom: 16 }}
       >
-        No se encontraron vídeos. Crea uno y comparte con los demás.
+        No se encontraron vídeos.{" "}
+        <Link
+          href="/create"
+          style={{ color: Colors.light.primary, fontWeight: "bold" }}
+        >
+          Crea uno
+        </Link>{" "}
+        y comparte con los demás.
       </ThemedText>
     </View>
   );
