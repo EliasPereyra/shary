@@ -9,7 +9,7 @@ import {
   ImageGravity,
 } from "react-native-appwrite";
 import { Appconfig } from "./appwrite.config";
-import { AppwriteFile, VideoPost } from "@/types/videoPost";
+import { VideoPost } from "@/types/videoPost";
 
 const client = new Client()
   .setProject(Appconfig.projectId!)
@@ -237,18 +237,18 @@ export const uploadFile = async ({
   file,
   type,
 }: {
-  file: AppwriteFile;
+  file: File;
   type: "image" | "video";
 }) => {
   if (!file) throw new Error("El archivo es requerido");
 
-  console.log("Subiendo el archivo", file);
+  console.info("Subiendo el archivo", file);
 
   try {
     const uploadedFile = await storage.createFile(
       Appconfig.storageId!,
       ID.unique(),
-      file,
+      file as any,
       [],
       (e) => {
         if (e.progress) console.log(e.progress);
