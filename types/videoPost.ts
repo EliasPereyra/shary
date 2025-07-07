@@ -1,14 +1,7 @@
-export interface AppwriteFile {
-  name: string;
-  uri: string;
-  type: string;
-  size: number;
-}
-
 export interface VideoPost {
   title: string;
-  thumbnailUri: AppwriteFile;
-  videoUri: AppwriteFile;
+  thumbnailUri: File;
+  videoUri: File;
   description: string;
   creator: string;
 }
