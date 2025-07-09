@@ -1,26 +1,31 @@
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 import {
   FlatList,
   Image,
   RefreshControl,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Input from "@/components/atoms/input";
-import Post from "@/components/molecules/post";
+import { Post } from "@/components/molecules/post";
 import Trending from "@/components/molecules/trending";
 import NoVideosMessage from "@/components/atoms/no-videos-msg";
+import { useAppwriteData } from "@/hooks/useAppwriteData";
+import { useUser } from "@/hooks/useUser";
+import { getAllPosts, signOut } from "@/services/appwrite";
+import { showSuccessMessage } from "@/utils/toastMsgs";
 import { Colors } from "@/constants/Colors";
-import { objs } from "@/utils/mock";
-import { useUserContext } from "@/context/UserAccount.Provider";
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
-  const { userAccount } = useUserContext();
+  const { data: posts } = useAppwriteData(getAllPosts());
+  const user = useUser();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -29,12 +34,22 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
+  const onSignOutHandler = async () => {
+    try {
+      await signOut();
+
+      showSuccessMessage("Sesión cerrada");
+      router.push("/signin");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    // TODO: Make difference between the screen bg color and the tabbar bg
-    <SafeAreaView style={{ backgroundColor: "#FAF8F8" }}>
+    <SafeAreaView style={{ backgroundColor: "#FAF8F8", height: "100%" }}>
       <FlatList
-        data={objs}
-        keyExtractor={(item) => item.id.toString()}
+        data={posts}
+        keyExtractor={(item) => item.id?.toString()}
         ListHeaderComponent={() => (
           <View style={{ padding: 16 }}>
             <ThemedView
@@ -42,27 +57,50 @@ export default function HomeScreen() {
               style={styles.headerContainer}
             >
               <View style={styles.headerText}>
-                <ThemedText
-                  type="default"
-                  darkColor={Colors.light.white}
-                  lightColor={Colors.dark.text}
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 12,
+                  }}
                 >
-                  Bienvenido
-                </ThemedText>
-                <ThemedText
-                  darkColor={Colors.light.black}
-                  lightColor={Colors.light.black}
-                  type="title"
-                >
-                  Juan Perez
-                </ThemedText>
+                  <Image
+                    source={{
+                      uri: user?.avatar,
+                    }}
+                    style={{ width: 30, height: 30, borderRadius: 10 }}
+                  />
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <ThemedText
+                      type="default"
+                      darkColor={Colors.light.white}
+                      lightColor={Colors.dark.text}
+                    >
+                      Bienvenido
+                    </ThemedText>
+                    <ThemedText
+                      darkColor={Colors.light.black}
+                      lightColor={Colors.light.black}
+                      type="title"
+                    >
+                      {user?.fullname}
+                    </ThemedText>
+                  </View>
+                </View>
               </View>
-              <Image
-                source={require("@/assets/images/share-blue.png")}
-                width={62}
-                height={62}
-                style={{ aspectRatio: 1 }}
-              />
+              <TouchableOpacity onPress={onSignOutHandler} activeOpacity={0.8}>
+                <Image
+                  source={require("@/assets/images/logout-icon.png")}
+                  style={{ width: 32, height: 32, cursor: "pointer" }}
+                />
+              </TouchableOpacity>
             </ThemedView>
             <Input
               type="search"
@@ -73,15 +111,15 @@ export default function HomeScreen() {
 
             <View style={styles.popularVideos}>
               <ThemedText
-                style={{ fontSize: 20, marginBottom: 16 }}
+                style={{ fontSize: 22, marginBottom: 16 }}
                 darkColor={Colors.light.middleGray}
               >
                 Vídeos Populares
               </ThemedText>
 
-              <Trending posts={objs ?? []} />
+              <Trending posts={posts} />
             </View>
-            <ThemedText type="default" style={{ fontSize: 20, marginTop: 20 }}>
+            <ThemedText type="default" style={{ fontSize: 22, marginTop: 40 }}>
               Todos los vídeos
             </ThemedText>
           </View>
@@ -96,7 +134,7 @@ export default function HomeScreen() {
               padding: 16,
             }}
           >
-            <Post post={item} />
+            <Post key={item.id} post={item} avatar={user?.avatar} />
           </View>
         )}
         ListEmptyComponent={() => <NoVideosMessage />}
