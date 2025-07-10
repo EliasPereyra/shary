@@ -10,13 +10,17 @@ import { getCurrentUser } from "@/services/appwrite";
  * @returns user
  */
 export const useUser = () => {
-  const [user, setUser] = useState<Models.Document>({} as Models.Document);
+  const [user, setUser] = useState<Models.Document | null>(
+    {} as Models.Document
+  );
 
   const getUser = async () => {
     try {
       const user = await getCurrentUser();
 
-      setUser(user as Models.Document);
+      if (user) {
+        setUser(user);
+      }
     } catch (err) {
       console.error(err);
     }
