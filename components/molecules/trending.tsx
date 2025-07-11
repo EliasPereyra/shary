@@ -1,6 +1,8 @@
 import { FlatList } from "react-native";
 import TrendingItem from "../atoms/trending-item";
 import { useState } from "react";
+import { ThemedView } from "../ThemedView";
+import { ThemedText } from "../ThemedText";
 
 export default function Trending({ posts }) {
   const [activeItem, setActiveItem] = useState(posts[0]);
@@ -16,9 +18,17 @@ export default function Trending({ posts }) {
       data={posts}
       horizontal
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TrendingItem item={item} activeItem={activeItem} />
-      )}
+      renderItem={({ item }) =>
+        posts.length === 0 ? (
+          <ThemedView>
+            <ThemedText>
+              No hay videos populares. Comienza a subir tus videos.
+            </ThemedText>
+          </ThemedView>
+        ) : (
+          <TrendingItem item={item} activeItem={activeItem} />
+        )
+      }
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
