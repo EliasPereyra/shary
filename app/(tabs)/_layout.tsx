@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import React from "react";
 import { Image, Platform, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -7,9 +7,14 @@ import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useUserContext } from "@/context/UserAccount.Provider";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+  const { isLoading, isLoggedIn } = useUserContext();
+
+  if (!isLoading && !isLoggedIn) return <Redirect href="/signin" />;
 
   return (
     <Tabs
@@ -21,12 +26,10 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           default: {
             backgroundColor: "#F3F3F3",
-            height: 70,
             borderColor: "#D5D5D5",
           },
           android: {
             backgroundColor: "#FAF8F8",
-            height: 70,
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -34,13 +37,12 @@ export default function TabLayout() {
           },
           ios: {
             backgroundColor: "#FAF8F8",
-            height: 70,
           },
         }),
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: "Home",
           tabBarIcon: () => (
