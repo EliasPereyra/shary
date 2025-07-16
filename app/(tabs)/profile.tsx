@@ -1,3 +1,4 @@
+import { use, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -5,17 +6,40 @@ import Input from "@/components/atoms/input";
 import Post from "@/components/molecules/post";
 import { Colors } from "@/constants/Colors";
 import { objs } from "@/utils/mock";
-import { useState } from "react";
+import { ThemedText } from "@/components/ThemedText";
+import { useAppwriteData } from "@/hooks/useAppwriteData";
+import { getCurrentUser, getUserPosts } from "@/services/appwrite";
+import NoVideosMessage from "@/components/atoms/no-videos-msg";
 
 export default function Profile() {
   const [search, setSearch] = useState("");
+  //const user = use(getCurrentUser());
+  const { data: userPosts, isLoading } = useAppwriteData(
+    getUserPosts(user?.id)
+  );
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        style={{ backgroundColor: Colors.light.white, height: "100%" }}
+      >
+        <View style={{ padding: 16 }}>
+          <ThemedText type="title" darkColor={Colors.light.black}>
+            Cargando...
+          </ThemedText>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <SafeAreaView style={{ backgroundColor: Colors.light.white }}>
+    <SafeAreaView
+      style={{ backgroundColor: Colors.light.white, height: "100%" }}
+    >
       <View style={{ padding: 16 }}>
         <FlatList
-          data={objs ?? []}
-          keyExtractor={(item) => item.id.toString()}
+          data={userPosts}
+          keyExtractor={(item) => item?.id}
           ListHeaderComponent={() => (
             <>
               <View
@@ -30,25 +54,29 @@ export default function Profile() {
               >
                 <Image
                   source={{
-                    uri: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    uri: user?.avatar,
                   }}
                   style={{ width: 100, height: 100, borderRadius: 20 }}
                 />
                 <Text style={{ fontSize: 30, fontWeight: "bold" }}>
-                  John Doe
+                  {user?.fullname}
                 </Text>
 
                 <View
                   style={{ display: "flex", flexDirection: "row", gap: 16 }}
                 >
                   <View style={styles.col}>
-                    <Text style={styles.textBold}>10</Text>
-                    <Text>Publicaciones</Text>
+                    <Text style={styles.textBold}>{userPosts?.length}</Text>
+                    <ThemedText style={{ color: Colors.light.middleGray }}>
+                      Publicaciones
+                    </ThemedText>
                   </View>
 
                   <View style={styles.col}>
-                    <Text style={styles.textBold}>1.2k</Text>
-                    <Text>Vistas</Text>
+                    <Text style={styles.textBold}>{objs.length}</Text>
+                    <ThemedText style={{ color: Colors.light.middleGray }}>
+                      Vistas
+                    </ThemedText>
                   </View>
                 </View>
               </View>
@@ -63,9 +91,10 @@ export default function Profile() {
           )}
           renderItem={({ item }) => (
             <View style={{ marginTop: 32 }}>
-              <Post post={item} />
+              <Post key={item.id} post={item} />
             </View>
           )}
+          ListEmptyComponent={() => <NoVideosMessage />}
         />
       </View>
     </SafeAreaView>
@@ -80,5 +109,6 @@ const styles = StyleSheet.create({
   textBold: {
     fontWeight: "bold",
     fontSize: 24,
+    color: Colors.light.black,
   },
 });
