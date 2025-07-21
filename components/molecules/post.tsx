@@ -8,18 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import {} from "expo-file-system";
 
 import { Colors } from "@/constants/Colors";
 
-type PostProps = {
-  post: any;
-};
-
-export default function Post({ post }: PostProps) {
+export default function Post(key, post, avatar) {
   const [play, setPlay] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View key={key} style={styles.container}>
       <View
         style={{
           display: "flex",
@@ -30,23 +27,31 @@ export default function Post({ post }: PostProps) {
       >
         <Image
           style={{ width: 40, height: 40, borderRadius: 100 }}
-          source={require("@/assets/images/img-1.png")}
+          source={{ uri: avatar }}
         />
 
         <View style={{ display: "flex", flexDirection: "column" }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{post.title}</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            {post?.title}
+          </Text>
           <Text style={{ fontSize: 12, color: Colors.light.middleGray }}>
-            {post.author}
+            {post?.creator}
           </Text>
         </View>
       </View>
 
       {play ? (
         <Video
-          source={{ uri: post.video }}
+          source={{ uri: post?.videoUrl }}
           useNativeControls
           shouldPlay
-          style={{ width: "100%", height: 320, borderRadius: 8 }}
+          style={{
+            width: "100%",
+            height: 320,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: Colors.light.gray,
+          }}
           resizeMode={ResizeMode.CONTAIN}
         />
       ) : (
@@ -56,12 +61,15 @@ export default function Post({ post }: PostProps) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            borderWidth: 1,
+            borderColor: Colors.light.gray,
+            borderRadius: 8,
           }}
           onPress={() => setPlay(true)}
           activeOpacity={0.7}
         >
           <ImageBackground
-            source={post.thumbnail}
+            source={{ uri: post?.thumbnail }}
             onProgress={() => setPlay(true)}
             style={{
               width: "100%",
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 8,
     width: "100%",
-    marginTop: 16,
+    marginTop: 8,
   },
   header: {
     display: "flex",
