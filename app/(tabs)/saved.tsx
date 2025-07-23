@@ -19,11 +19,11 @@ export default function Saved() {
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={() => (
           <View>
-            <ThemedText type="title" darkColor={Colors.light.black}>
+            <ThemedText type="title" darkColor={Colors.light.primary}>
               Vídeos guardados
             </ThemedText>
 
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 16, marginBottom: 16 }}>
               <Input
                 type="search"
                 placeholder="Busca tus vídeos guardados"
